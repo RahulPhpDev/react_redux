@@ -1,26 +1,44 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import store from './redux/store/index';
+import {redux} from 'redux';
+import { connect } from 'react-redux';
+import { getUser, getSinger} from './redux/ActionCreator/Index';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+const AppComponent = (props) => {
+        return (
+        <div className="App">
+        <header className="App-header">
+            <p> Redux Tutrials {props.users.name}</p>
+            <button onClick = {() => props.getUser() }>Click Here</button>
+            <p> Other Reducers Data About Best Singer</p>
+            <button onClick = {() =>props.getSinger() }> Show Singers </button>
+            {
+              props.singers.length > 0 && 
+                props.singers.map(singer => 
+                  <p key = {singer.id}>{singer.name } </p>
+                ) 
+              } 
+          
+          </header>
+        </div>
+      );
+  }
+const mapDispatchToProps = (dispatch) => {
+    return ({
+      getUser : ()  => getUser(dispatch),
+      getSinger : () => getSinger(dispatch)
+    }
+  )
 }
+const mapStateToProps = (state) => {
+  return {
+    users : state.users,
+    singers : state.singers,
+  }
+}
+const App =  connect(mapStateToProps,mapDispatchToProps)(AppComponent);
+
 
 export default App;
